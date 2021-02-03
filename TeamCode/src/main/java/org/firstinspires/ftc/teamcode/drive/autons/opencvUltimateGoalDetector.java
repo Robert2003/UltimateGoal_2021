@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.autons;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -34,9 +34,9 @@ import java.util.List;
  * monitor: 640 x 480
  *YES
  */
-@Autonomous(name= "opencvSkystoneDetector", group="Sky autonomous")
+@Autonomous(name= "opencvUltimateGoalDetector", group="Sky autonomous")
 @Disabled//comment out this line before using
-public class opencvSkystoneDetector extends LinearOpMode {
+public class opencvUltimateGoalDetector extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //0 means skystone, 1 means yellow stone
