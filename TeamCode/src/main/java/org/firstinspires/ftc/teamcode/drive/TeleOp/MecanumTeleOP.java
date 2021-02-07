@@ -56,6 +56,8 @@ public class MecanumTeleOP extends OpMode
     private DcMotor rightFront = null;
     private DcMotor rightRear = null;
 
+    private Servo servo;
+
     private DcMotor intake = null;
     private DcMotor flyWheel = null;
     private DcMotor wobbleArm = null;
@@ -84,6 +86,9 @@ public class MecanumTeleOP extends OpMode
         intake = hardwareMap.get(DcMotor.class, "intake");
         flyWheel = hardwareMap.get(DcMotor.class, "flyWheel");
         wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
+
+        servo = hardwareMap.get(Servo.class, "servo");
+        servo.setPosition(1);
 
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -136,7 +141,7 @@ public class MecanumTeleOP extends OpMode
         if(gamepad2.right_bumper) flyWheel.setPower(0.85f);
         else flyWheel.setPower(0f);
 
-        drive = -gamepad1.right_stick_y;
+        drive = gamepad1.right_stick_y;
         strafe = -gamepad1.right_stick_x;
         rotate = gamepad1.right_trigger - gamepad1.left_trigger;
 
@@ -161,6 +166,15 @@ public class MecanumTeleOP extends OpMode
         rightFront.setPower(frontRightPower);
         leftRear.setPower(rearLeftPower);
         rightRear.setPower(rearRightPower);
+
+        if(gamepad2.dpad_left)
+        {
+            servo.setPosition(0.5);
+        }
+        if(gamepad2.dpad_right)
+        {
+            servo.setPosition(1);
+        }
     }
 
     @Override

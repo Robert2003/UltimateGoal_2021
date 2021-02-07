@@ -208,10 +208,8 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
             telemetry.clearAll();
             telemetry.addLine("Constant power test complete");
-            //telemetry.addLine(Misc.formatInvariant("kA = %.5f (R^2 = %.2f)",
-                    //accelResult.kA, accelResult.rSquare));
-            telemetry.addData("sasa", accelResult.kA);
-            telemetry.addData("sasa", accelResult.rSquare);
+            telemetry.addLine(Misc.formatInvariant("kA = %.5f (R^2 = %.2f)",
+                    accelResult.kA, accelResult.rSquare));
             telemetry.update();
         }
 
