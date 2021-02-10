@@ -73,15 +73,17 @@ public class MecanumTeleOP extends OpMode
     double strafe;
     double rotate;
 
+    boolean supress2 = false;
+
     private BNO055IMU imu;
 
     @Override
     public void init()
     {
-        leftFront = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightFront = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftRear = hardwareMap.get(DcMotor.class, "left_rear_drive");
-        rightRear = hardwareMap.get(DcMotor.class, "right_rear_drive");
+        leftFront = hardwareMap.get(DcMotor.class, "fl_motor");
+        rightFront = hardwareMap.get(DcMotor.class, "fr_motor");
+        leftRear = hardwareMap.get(DcMotor.class, "bl_motor");
+        rightRear = hardwareMap.get(DcMotor.class, "br_motor");
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         flyWheel = hardwareMap.get(DcMotor.class, "flyWheel");
@@ -162,11 +164,30 @@ public class MecanumTeleOP extends OpMode
             frontRightPower *= 0.3;
         }
 
+
+        if(gamepad1.left_bumper)
+            supress2 = !supress2;
+
+        if(supress2)
+        {
+            rearLeftPower *= 0.6;
+            frontLeftPower *= 0.6;
+            rearRightPower *= 0.6;
+            frontRightPower *= 0.6;
+        }
+
         leftFront.setPower(frontLeftPower);
         rightFront.setPower(frontRightPower);
         leftRear.setPower(rearLeftPower);
         rightRear.setPower(rearRightPower);
 
+        if(gamepad2.left_bumper){
+            if(runtime.milliseconds() < 0.5){
+                runtime.reset();
+                servo.setPosition(0.5);
+            }
+        } else servo.setPosition(1);
+        /*
         if(gamepad2.dpad_left)
         {
             servo.setPosition(0.5);
@@ -175,6 +196,7 @@ public class MecanumTeleOP extends OpMode
         {
             servo.setPosition(1);
         }
+         */
     }
 
     @Override
