@@ -92,8 +92,8 @@ public class MecanumTeleOP extends OpMode
         servo = hardwareMap.get(Servo.class, "servo");
         servo.setPosition(1);
 
-        leftRear.setDirection(DcMotor.Direction.REVERSE);
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -115,12 +115,13 @@ public class MecanumTeleOP extends OpMode
     @Override
     public void loop()
     {
-        Acceleration angle = imu.getGravity();
-        telemetry.addData("first", angle.xAccel);
-        telemetry.addData("second", angle.yAccel);
-        telemetry.addData("third", angle.zAccel);
+        /*Acceleration angle = imu.getGravity();
+        telemetry.addData("x1", leftFront.getCurrentPosition());
+        telemetry.addData("x2", rightFront.getCurrentPosition());
+        telemetry.addData("x3", rightRear.getCurrentPosition());
+        telemetry.addData("x4", leftRear.getCurrentPosition());
         telemetry.update();
-
+*/
         if (gamepad2.y) {
             intake.setPower(1);
         } else if (gamepad2.a) {
@@ -145,7 +146,7 @@ public class MecanumTeleOP extends OpMode
 
         drive = gamepad1.right_stick_y;
         strafe = -gamepad1.right_stick_x;
-        rotate = gamepad1.right_trigger - gamepad1.left_trigger;
+        rotate = -gamepad1.right_trigger + gamepad1.left_trigger;
 
         rearLeftPower = -strafe + drive + rotate;
         frontLeftPower = strafe + drive + rotate;
