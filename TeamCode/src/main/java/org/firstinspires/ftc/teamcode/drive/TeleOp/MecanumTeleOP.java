@@ -90,7 +90,7 @@ public class MecanumTeleOP extends OpMode
         wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
 
         servo = hardwareMap.get(Servo.class, "servo");
-        servo.setPosition(1);
+        servo.setPosition(0.5);
 
         rightRear.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
@@ -115,13 +115,13 @@ public class MecanumTeleOP extends OpMode
     @Override
     public void loop()
     {
-        /*Acceleration angle = imu.getGravity();
+        /*Acceleration angle = imu.getGravity();*/
         telemetry.addData("x1", leftFront.getCurrentPosition());
         telemetry.addData("x2", rightFront.getCurrentPosition());
         telemetry.addData("x3", rightRear.getCurrentPosition());
         telemetry.addData("x4", leftRear.getCurrentPosition());
         telemetry.update();
-*/
+
         if (gamepad2.y) {
             intake.setPower(1);
         } else if (gamepad2.a) {
@@ -182,12 +182,18 @@ public class MecanumTeleOP extends OpMode
         leftRear.setPower(rearLeftPower);
         rightRear.setPower(rearRightPower);
 
-        if(gamepad2.left_bumper){
-            if(runtime.milliseconds() < 0.5){
+        if(gamepad2.left_bumper)
+        {
+            if(runtime.seconds() > 1.6)
+            {
                 runtime.reset();
-                servo.setPosition(0.5);
+                servo.setPosition(0);
             }
-        } else servo.setPosition(1);
+            else if(runtime.seconds() > 0.8)
+                servo.setPosition(0.5);
+        }
+        else
+            servo.setPosition(0.5);
         /*
         if(gamepad2.dpad_left)
         {
