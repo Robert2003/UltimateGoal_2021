@@ -57,8 +57,10 @@ public class MecanumTeleOP extends OpMode
     private DcMotor rightRear = null;
 
     private Servo servo;
+    private Servo wobbleServo;
 
-    private DcMotor intake = null;
+    private DcMotor intake1 = null;
+    private DcMotor intake2 = null;
     private DcMotor flyWheel = null;
     private DcMotor wobbleArm = null;
 
@@ -73,6 +75,9 @@ public class MecanumTeleOP extends OpMode
     double strafe;
     double rotate;
 
+    double powerLatchingUp;
+    double powerLatchingDown;
+
     boolean supress2 = false;
 
     private BNO055IMU imu;
@@ -85,15 +90,20 @@ public class MecanumTeleOP extends OpMode
         leftRear = hardwareMap.get(DcMotor.class, "bl_motor");
         rightRear = hardwareMap.get(DcMotor.class, "br_motor");
 
-        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake1 = hardwareMap.get(DcMotor.class, "intake1");
+        intake2 = hardwareMap.get(DcMotor.class, "intake2");
         flyWheel = hardwareMap.get(DcMotor.class, "flyWheel");
         wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
 
         servo = hardwareMap.get(Servo.class, "servo");
+        wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
         servo.setPosition(0.5);
 
         rightRear.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
+        intake2.setDirection(DcMotor.Direction.REVERSE);
+        wobbleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        wobbleArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -120,17 +130,19 @@ public class MecanumTeleOP extends OpMode
         telemetry.addData("x2", rightFront.getCurrentPosition());
         telemetry.addData("x3", rightRear.getCurrentPosition());
         telemetry.addData("x4", leftRear.getCurrentPosition());
+        telemetry.addData("wobble", wobbleArm.getCurrentPosition());
         telemetry.update();
 
         if (gamepad2.y) {
-            intake.setPower(1);
+            intake1.setPower(1);
+            intake2.setPower(1);
         } else if (gamepad2.a) {
-            intake.setPower(-1);
+            intake1.setPower(-1);
+            intake2.setPower(-1);
         } else if (gamepad2.x) {
-            intake.setPower(0);
+            intake1.setPower(0);
+            intake2.setPower(0);
         }
-
-        wobbleArm.setPower(gamepad2.left_stick_y*0.4);
 
         /*
         flyWheelPower = gamepad2.right_stick_y;
@@ -139,10 +151,33 @@ public class MecanumTeleOP extends OpMode
                 flyWheel.setPower(0.75);
             else
                 flyWheel.setPower(flyWheelPower);
-         */
+*/
+        powerLatchingUp = gamepad2.left_trigger;
+        powerLatchingDown = -gamepad2.right_trigger;
 
-        if(gamepad2.right_bumper) flyWheel.setPower(0.85f);
-        else flyWheel.setPower(0f);
+        if((powerLatchingUp==0 && powerLatchingDown==0))
+        {
+            wobbleArm.setTargetPosition(wobbleArm.getCurrentPosition());
+            wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            wobbleArm.setPower(1);
+        }
+        else
+            wobbleArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        if(powerLatchingDown!=0 || powerLatchingUp!=0)
+            wobbleArm.setPower(powerLatchingUp+powerLatchingDown);
+
+        if(gamepad2.dpad_left)
+            wobbleServo.setPosition(1);
+        if(gamepad2.dpad_right)
+            wobbleServo.setPosition(0);
+        if(gamepad2.dpad_down)
+            wobbleServo.setPosition(0.5);
+
+        if(gamepad2.right_bumper)
+            flyWheel.setPower(0.85f);
+        else
+            flyWheel.setPower(0f);
 
         drive = gamepad1.right_stick_y;
         strafe = -gamepad1.right_stick_x;
