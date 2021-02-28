@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.TeleOp;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,7 +11,7 @@ public class RobotConstants
     public DcMotor leftFront = null, leftRear = null, rightFront = null, rightRear = null;
 
     public DcMotor intake1   = null, intake2 = null;
-    public DcMotor flyWheel  = null;
+    public DcMotorEx flyWheel  = null;
     public DcMotor wobbleArm = null;
 
     public Servo servo, wobbleServo;
@@ -34,7 +35,7 @@ public class RobotConstants
 
         intake1   = hardwareMap.get(DcMotor.class, "intake1");
         intake2   = hardwareMap.get(DcMotor.class, "intake2");
-        flyWheel  = hardwareMap.get(DcMotor.class, "flyWheel");
+        flyWheel  = hardwareMap.get(DcMotorEx.class, "flyWheel");
         wobbleArm = hardwareMap.get(DcMotor.class, "wobbleArm");
 
         intake2.setDirection(DcMotor.Direction.REVERSE);
